@@ -4,113 +4,304 @@
   <meta charset="UTF-8" />
   <title>EZ Baccarat Dragon 7 &amp; Panda 8 Trainer (Educational)</title>
   <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --accent: #22c55e;
+      --accent-soft: #4ade80;
+      --danger: #f97373;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border: #1f2937;
+      --btn-bg: #1f2937;
+      --btn-bg-hover: #374151;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      max-width: 720px;
-      margin: 20px auto;
-      line-height: 1.4;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%, #000 100%);
+      color: var(--text-main);
     }
+
     h1 {
-      font-size: 1.4rem;
-      margin-bottom: 0.4rem;
+      font-size: 1.6rem;
+      margin-bottom: 0.25rem;
     }
+
     h2 {
       font-size: 1.1rem;
-      margin-top: 1.2rem;
+      margin: 1.4rem 0 0.4rem;
     }
-    label {
-      display: inline-block;
-      margin: 0.5rem 0;
+
+    p {
+      margin: 0.25rem 0;
     }
-    button {
-      margin: 4px;
-      padding: 6px 10px;
-      cursor: pointer;
-    }
-    #cards {
-      margin-top: 0.8rem;
-    }
-    .status {
-      margin-top: 0.4rem;
-    }
-    .value {
-      font-weight: bold;
-    }
-    .high {
-      color: #008000;
-      font-weight: bold;
-    }
-    .low  {
-      color: #a00000;
-    }
+
     .note {
       font-size: 0.8rem;
-      color: #555;
-      margin-top: 0.4rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
     }
+
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 10px 12px;
+      background: rgba(15,23,42,0.9);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    label {
+      font-size: 0.9rem;
+    }
+
+    input[type="number"] {
+      width: 64px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--text-main);
+    }
+
+    button {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--btn-bg);
+      color: var(--text-main);
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.05s, box-shadow 0.15s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+
+    button:hover {
+      background: var(--btn-bg-hover);
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: 0 0 0 rgba(0,0,0,0.4);
+    }
+
+    #reset {
+      background: #ef4444;
+      border-color: #b91c1c;
+    }
+
+    #reset:hover {
+      background: #dc2626;
+    }
+
+    .card-grid-wrapper {
+      margin-top: 16px;
+      padding: 14px 14px 10px;
+      background: rgba(15,23,42,0.9);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .card-grid-title {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+    }
+
+    #cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+      gap: 10px;
+    }
+
+    #cards button {
+      font-size: 1.1rem;
+      padding: 14px 0;
+      min-height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #1f2937, #020617);
+    }
+
+    .panel {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: rgba(15,23,42,0.92);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
     .section {
-      border-top: 1px solid #ddd;
-      margin-top: 1rem;
-      padding-top: 1rem;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(31,41,55,0.7);
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 4px;
+      font-size: 0.95rem;
+    }
+
+    .label {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .value {
+      font-weight: 600;
+    }
+
+    .low {
+      color: var(--danger);
+    }
+
+    .mid {
+      color: var(--accent-soft);
+    }
+
+    .high {
+      color: var(--accent);
+      text-shadow: 0 0 8px rgba(34,197,94,0.5);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .chip {
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--text-muted);
+    }
+
+    .chip-strong {
+      border-color: var(--accent-soft);
+      color: var(--accent-soft);
+    }
+
+    .chip-warn {
+      border-color: var(--danger);
+      color: var(--danger);
     }
   </style>
 </head>
 <body>
-  <h1>EZ Baccarat Dragon 7 &amp; Panda 8 Trainer (Practice Only)</h1>
+  <h1>EZ Baccarat Dragon 7 &amp; Panda 8 Trainer</h1>
   <p class="note">
-    Educational home tool only. Do not use any electronic aid in a live casino.
+    Educational home tool only. Do <strong>not</strong> use any electronic aid in a live casino.
   </p>
 
-  <div>
+  <div class="top-bar">
     <label>Total decks:
       <input type="number" id="decks" value="8" min="1" max="8">
     </label>
     <button id="reset">Reset Shoe</button>
+    <span class="note">
+      Assumes 8‑deck shoe with 10 unseen burn cards at the start (not counted).
+    </span>
   </div>
 
-  <h2>Click cards as they are dealt</h2>
-  <div id="cards">
-    <button data-rank="A">A</button>
-    <button data-rank="2">2</button>
-    <button data-rank="3">3</button>
-    <button data-rank="4">4</button>
-    <button data-rank="5">5</button>
-    <button data-rank="6">6</button>
-    <button data-rank="7">7</button>
-    <button data-rank="8">8</button>
-    <button data-rank="9">9</button>
-    <button data-rank="10">10</button>
-    <button data-rank="J">J</button>
-    <button data-rank="Q">Q</button>
-    <button data-rank="K">K</button>
+  <div class="card-grid-wrapper">
+    <div class="card-grid-title">Click cards in the order they are dealt</div>
+    <div id="cards">
+      <button data-rank="A">A</button>
+      <button data-rank="2">2</button>
+      <button data-rank="3">3</button>
+      <button data-rank="4">4</button>
+      <button data-rank="5">5</button>
+      <button data-rank="6">6</button>
+      <button data-rank="7">7</button>
+      <button data-rank="8">8</button>
+      <button data-rank="9">9</button>
+      <button data-rank="10">10</button>
+      <button data-rank="J">J</button>
+      <button data-rank="Q">Q</button>
+      <button data-rank="K">K</button>
+    </div>
   </div>
 
-  <div class="section">
-    <h2>Dragon 7 count (simple system)</h2>
+  <div class="panel">
+    <h2>Dragon 7 count</h2>
     <p class="note">
-      Example educational tags: 4–7 = −1, 8–9 = +2, others = 0. True-count “interesting” region often around +4 or higher in public analyses.
+      Tags: 4–7 = −1, 8–9 = +2, others = 0. Based on simulation, study zones:
+      TC ≥ 4.0 (edge starts), TC ≥ 5.0 (strong).[code_file:1]
     </p>
-    <p class="status">Running count: <span id="dragonRC" class="value">0</span></p>
-    <p class="status">Decks remaining: <span id="dragonDR" class="value">0.00</span></p>
-    <p class="status">True count:
-      <span id="dragonTC" class="value low">0.00</span>
-    </p>
+
+    <div class="section">
+      <div class="status-row">
+        <span class="label">Running count</span>
+        <span id="dragonRC" class="value">0</span>
+      </div>
+      <div class="status-row">
+        <span class="label">Decks remaining (approx)</span>
+        <span id="dragonDR" class="value">0.00</span>
+      </div>
+      <div class="status-row">
+        <span class="label">True count</span>
+        <span id="dragonTC" class="value low">0.00</span>
+      </div>
+      <div class="chip-row">
+        <span class="chip chip-warn">TC &lt; 4.0: no bet zone</span>
+        <span class="chip">4.0 ≤ TC &lt; 5.0: mild edge (1 unit in notebook)</span>
+        <span class="chip chip-strong">TC ≥ 5.0: strong edge (2 units in notebook)</span>
+      </div>
+    </div>
   </div>
 
-  <div class="section">
-    <h2>Panda 8 count (simplified co-count)</h2>
+  <div class="panel">
+    <h2>Panda 8 co‑count</h2>
     <p class="note">
-      Simplified unbalanced Panda co-count tags (from public analysis): A = +1, 4/5 = −1, 9 = +2, others = 0.
-      Here we just flag Panda’s running count as “high (study zone)” when RC ≥ 35.
+      Simplified tags: A = +1, 4/5 = −1, 9 = +2, others = 0.
+      Simulation sweet spot: RC ≥ 32 (edge starts), RC ≥ 38 (strong).[code_file:1]
     </p>
-    <p class="status">Panda running count: <span id="pandaRC" class="value">0</span></p>
-    <p class="status">Panda indicator:
-      <span id="pandaFlag" class="value low">normal</span>
-    </p>
+
+    <div class="section">
+      <div class="status-row">
+        <span class="label">Panda running count</span>
+        <span id="pandaRC" class="value">0</span>
+      </div>
+      <div class="status-row">
+        <span class="label">Panda indicator</span>
+        <span id="pandaFlag" class="value low">normal</span>
+      </div>
+      <div class="chip-row">
+        <span class="chip chip-warn">RC &lt; 32: no bet zone</span>
+        <span class="chip">32 ≤ RC &lt; 38: mild edge (1 unit in notebook)</span>
+        <span class="chip chip-strong">RC ≥ 38: strong edge (2 units in notebook)</span>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Dragon 7 tags (simple educational example)
+    // === Thresholds from simulation (study-only) ===
+    const DRAGON_BET_THR = 4.0;   // start Dragon interest
+    const DRAGON_MAX_THR = 5.0;   // strong Dragon zone
+
+    const PANDA_BET_THR  = 32;    // start Panda interest
+    const PANDA_MAX_THR  = 38;    // strong Panda zone
+
+    // Dragon 7 tags (simple educational system)
     const DRAGON_TAGS = {
       'A': 0, '2': 0, '3': 0,
       '4': -1, '5': -1, '6': -1, '7': -1,
@@ -118,8 +309,7 @@
       '10': 0, 'J': 0, 'Q': 0, 'K': 0
     };
 
-    // Simplified Panda 8 co-count tags (unbalanced):
-    // A = +1, 4/5 = -1, 9 = +2, others = 0.
+    // Simplified Panda 8 co-count tags (unbalanced)
     const PANDA_TAGS = {
       'A':  1,
       '2':  0,
@@ -137,9 +327,9 @@
     };
 
     let decksTotal = 8;
-    let cardsSeen = 0;
-    let dragonRC = 0;
-    let pandaRC = 0;
+    let cardsSeen  = 0;  // only visible cards (burns not counted)
+    let dragonRC   = 0;
+    let pandaRC    = 0;
 
     const decksInput   = document.getElementById('decks');
     const dragonRCEl   = document.getElementById('dragonRC');
@@ -159,8 +349,8 @@
     }
 
     function updateDisplay() {
-      const totalCards     = decksTotal * 52;
-      const cardsRemaining = Math.max(totalCards - cardsSeen, 0);
+      const TOTAL_CARDS = decksTotal * 52;
+      const cardsRemaining = Math.max(TOTAL_CARDS - cardsSeen, 0);
       const decksRemaining = cardsRemaining / 52;
 
       let trueCount = 0;
@@ -172,19 +362,25 @@
 
       dragonRCEl.textContent = dragonRC;
       dragonDREl.textContent = decksRemaining.toFixed(2);
-      dragonTCEl.textContent = trueCount.toFixed(2);
 
-      if (trueCount >= 4) {
+      // Dragon true count styling
+      dragonTCEl.textContent = trueCount.toFixed(2);
+      if (trueCount >= DRAGON_MAX_THR) {
         dragonTCEl.className = 'value high';
+      } else if (trueCount >= DRAGON_BET_THR) {
+        dragonTCEl.className = 'value mid';
       } else {
         dragonTCEl.className = 'value low';
       }
 
+      // Panda running count + indicator
       pandaRCEl.textContent = pandaRC;
-
-      if (pandaRC >= 35) {
-        pandaFlagEl.textContent = 'high (study zone)';
+      if (pandaRC >= PANDA_MAX_THR) {
+        pandaFlagEl.textContent = 'strong (study zone)';
         pandaFlagEl.className = 'value high';
+      } else if (pandaRC >= PANDA_BET_THR) {
+        pandaFlagEl.textContent = 'mild edge';
+        pandaFlagEl.className = 'value mid';
       } else {
         pandaFlagEl.textContent = 'normal';
         pandaFlagEl.className = 'value low';
@@ -195,8 +391,10 @@
       const rank = e.target.dataset.rank;
       if (!rank) return;
 
-      const dTag = DRAGON_TAGS.hasOwnProperty(rank) ? DRAGON_TAGS[rank] : 0;
-      const pTag = PANDA_TAGS.hasOwnProperty(rank) ? PANDA_TAGS[rank] : 0;
+      const dTag = Object.prototype.hasOwnProperty.call(DRAGON_TAGS, rank)
+        ? DRAGON_TAGS[rank] : 0;
+      const pTag = Object.prototype.hasOwnProperty.call(PANDA_TAGS, rank)
+        ? PANDA_TAGS[rank] : 0;
 
       dragonRC += dTag;
       pandaRC  += pTag;
@@ -208,6 +406,7 @@
     document.getElementById('reset').addEventListener('click', resetShoe);
     decksInput.addEventListener('change', resetShoe);
 
+    // Initialize on load
     resetShoe();
   </script>
 </body>
