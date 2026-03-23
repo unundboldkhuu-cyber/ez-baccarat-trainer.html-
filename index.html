@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EZ Baccarat Dragon 7 &amp; Panda 8 Trainer (Educational)</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 720px;
+      margin: 20px auto;
+      line-height: 1.4;
+    }
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin-top: 1.2rem;
+    }
+    label {
+      display: inline-block;
+      margin: 0.5rem 0;
+    }
+    button {
+      margin: 4px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    #cards {
+      margin-top: 0.8rem;
+    }
+    .status {
+      margin-top: 0.4rem;
+    }
+    .value {
+      font-weight: bold;
+    }
+    .high {
+      color: #008000;
+      font-weight: bold;
+    }
+    .low  {
+      color: #a00000;
+    }
+    .note {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 0.4rem;
+    }
+    .section {
+      border-top: 1px solid #ddd;
+      margin-top: 1rem;
+      padding-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>EZ Baccarat Dragon 7 &amp; Panda 8 Trainer (Practice Only)</h1>
+  <p class="note">
+    Educational home tool only. Do not use any electronic aid in a live casino.
+  </p>
+
+  <div>
+    <label>Total decks:
+      <input type="number" id="decks" value="8" min="1" max="8">
+    </label>
+    <button id="reset">Reset Shoe</button>
+  </div>
+
+  <h2>Click cards as they are dealt</h2>
+  <div id="cards">
+    <button data-rank="A">A</button>
+    <button data-rank="2">2</button>
+    <button data-rank="3">3</button>
+    <button data-rank="4">4</button>
+    <button data-rank="5">5</button>
+    <button data-rank="6">6</button>
+    <button data-rank="7">7</button>
+    <button data-rank="8">8</button>
+    <button data-rank="9">9</button>
+    <button data-rank="10">10</button>
+    <button data-rank="J">J</button>
+    <button data-rank="Q">Q</button>
+    <button data-rank="K">K</button>
+  </div>
+
+  <div class="section">
+    <h2>Dragon 7 count (simple system)</h2>
+    <p class="note">
+      Example educational tags: 4–7 = −1, 8–9 = +2, others = 0. True-count “interesting” region often around +4 or higher in public analyses.
+    </p>
+    <p class="status">Running count: <span id="dragonRC" class="value">0</span></p>
+    <p class="status">Decks remaining: <span id="dragonDR" class="value">0.00</span></p>
+    <p class="status">True count:
+      <span id="dragonTC" class="value low">0.00</span>
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Panda 8 count (simplified co-count)</h2>
+    <p class="note">
+      Simplified unbalanced Panda co-count tags (from public analysis): A = +1, 4/5 = −1, 9 = +2, others = 0.
+      Here we just flag Panda’s running count as “high (study zone)” when RC ≥ 35.
+    </p>
+    <p class="status">Panda running count: <span id="pandaRC" class="value">0</span></p>
+    <p class="status">Panda indicator:
+      <span id="pandaFlag" class="value low">normal</span>
+    </p>
+  </div>
+
+  <script>
+    // Dragon 7 tags (simple educational example)
+    const DRAGON_TAGS = {
+      'A': 0, '2': 0, '3': 0,
+      '4': -1, '5': -1, '6': -1, '7': -1,
+      '8':  2, '9':  2,
+      '10': 0, 'J': 0, 'Q': 0, 'K': 0
+    };
+
+    // Simplified Panda 8 co-count tags (unbalanced):
+    // A = +1, 4/5 = -1, 9 = +2, others = 0.
+    const PANDA_TAGS = {
+      'A':  1,
+      '2':  0,
+      '3':  0,
+      '4': -1,
+      '5': -1,
+      '6':  0,
+      '7':  0,
+      '8':  0,
+      '9':  2,
+      '10': 0,
+      'J':  0,
+      'Q':  0,
+      'K':  0
+    };
+
+    let decksTotal = 8;
+    let cardsSeen = 0;
+    let dragonRC = 0;
+    let pandaRC = 0;
+
+    const decksInput   = document.getElementById('decks');
+    const dragonRCEl   = document.getElementById('dragonRC');
+    const dragonDREl   = document.getElementById('dragonDR');
+    const dragonTCEl   = document.getElementById('dragonTC');
+    const pandaRCEl    = document.getElementById('pandaRC');
+    const pandaFlagEl  = document.getElementById('pandaFlag');
+
+    function resetShoe() {
+      const v = parseInt(decksInput.value, 10);
+      decksTotal = (Number.isFinite(v) && v > 0) ? v : 8;
+      decksInput.value = decksTotal;
+      cardsSeen = 0;
+      dragonRC = 0;
+      pandaRC  = 0;
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      const totalCards     = decksTotal * 52;
+      const cardsRemaining = Math.max(totalCards - cardsSeen, 0);
+      const decksRemaining = cardsRemaining / 52;
+
+      let trueCount = 0;
+      if (decksRemaining > 0) {
+        trueCount = dragonRC / decksRemaining;
+      } else {
+        trueCount = dragonRC;
+      }
+
+      dragonRCEl.textContent = dragonRC;
+      dragonDREl.textContent = decksRemaining.toFixed(2);
+      dragonTCEl.textContent = trueCount.toFixed(2);
+
+      if (trueCount >= 4) {
+        dragonTCEl.className = 'value high';
+      } else {
+        dragonTCEl.className = 'value low';
+      }
+
+      pandaRCEl.textContent = pandaRC;
+
+      if (pandaRC >= 35) {
+        pandaFlagEl.textContent = 'high (study zone)';
+        pandaFlagEl.className = 'value high';
+      } else {
+        pandaFlagEl.textContent = 'normal';
+        pandaFlagEl.className = 'value low';
+      }
+    }
+
+    document.getElementById('cards').addEventListener('click', (e) => {
+      const rank = e.target.dataset.rank;
+      if (!rank) return;
+
+      const dTag = DRAGON_TAGS.hasOwnProperty(rank) ? DRAGON_TAGS[rank] : 0;
+      const pTag = PANDA_TAGS.hasOwnProperty(rank) ? PANDA_TAGS[rank] : 0;
+
+      dragonRC += dTag;
+      pandaRC  += pTag;
+      cardsSeen += 1;
+
+      updateDisplay();
+    });
+
+    document.getElementById('reset').addEventListener('click', resetShoe);
+    decksInput.addEventListener('change', resetShoe);
+
+    resetShoe();
+  </script>
+</body>
+</html>
