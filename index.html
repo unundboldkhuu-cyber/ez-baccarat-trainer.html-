@@ -204,6 +204,13 @@
       border-color: var(--danger);
       color: var(--danger);
     }
+
+    .total-exposure {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      text-align: right;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -261,10 +268,14 @@
         <span class="label">True count</span>
         <span id="dragonTC" class="value low">0.00</span>
       </div>
+      <div class="status-row">
+        <span class="label">Recommended units (study)</span>
+        <span id="dragonUnits" class="value low">0</span>
+      </div>
       <div class="chip-row">
-        <span class="chip chip-warn">TC &lt; 4.0: no‑bet zone</span>
-        <span class="chip">4.0 ≤ TC &lt; 5.0: mild edge (1 unit in notebook)</span>
-        <span class="chip chip-strong">TC ≥ 5.0: strong edge (2 units in notebook)</span>
+        <span class="chip chip-warn">TC &lt; 4.0: 0 units (no‑bet zone)</span>
+        <span class="chip">4.0 ≤ TC &lt; 5.0: 1 unit</span>
+        <span class="chip chip-strong">TC ≥ 5.0: 2 units</span>
       </div>
     </div>
   </div>
@@ -285,12 +296,20 @@
         <span class="label">Panda indicator</span>
         <span id="pandaFlag" class="value low">normal</span>
       </div>
+      <div class="status-row">
+        <span class="label">Recommended units (study)</span>
+        <span id="pandaUnits" class="value low">0</span>
+      </div>
       <div class="chip-row">
-        <span class="chip chip-warn">RC &lt; 32: no‑bet zone</span>
-        <span class="chip">32 ≤ RC &lt; 38: mild edge (1 unit in notebook)</span>
-        <span class="chip chip-strong">RC ≥ 38: strong edge (2 units in notebook)</span>
+        <span class="chip chip-warn">RC &lt; 32: 0 units (no‑bet zone)</span>
+        <span class="chip">32 ≤ RC &lt; 38: 1 unit</span>
+        <span class="chip chip-strong">RC ≥ 38: 2 units</span>
       </div>
     </div>
+  </div>
+
+  <div class="total-exposure">
+    Total suggested side‑bet units this hand: <span id="totalUnits">0</span>
   </div>
 
   <script>
@@ -335,8 +354,11 @@
     const dragonRCEl   = document.getElementById('dragonRC');
     const dragonDREl   = document.getElementById('dragonDR');
     const dragonTCEl   = document.getElementById('dragonTC');
+    const dragonUnitsEl= document.getElementById('dragonUnits');
     const pandaRCEl    = document.getElementById('pandaRC');
     const pandaFlagEl  = document.getElementById('pandaFlag');
+    const pandaUnitsEl = document.getElementById('pandaUnits');
+    const totalUnitsEl = document.getElementById('totalUnits');
 
     function resetShoe() {
       const v = parseInt(decksInput.value, 10);
@@ -360,31 +382,47 @@
         trueCount = dragonRC;
       }
 
+      // Dragon display
       dragonRCEl.textContent = dragonRC;
       dragonDREl.textContent = decksRemaining.toFixed(2);
-
-      // Dragon true count styling
       dragonTCEl.textContent = trueCount.toFixed(2);
+
+      let dragonUnits = 0;
       if (trueCount >= DRAGON_MAX_THR) {
         dragonTCEl.className = 'value high';
+        dragonUnits = 2;
       } else if (trueCount >= DRAGON_BET_THR) {
         dragonTCEl.className = 'value mid';
+        dragonUnits = 1;
       } else {
         dragonTCEl.className = 'value low';
+        dragonUnits = 0;
       }
+      dragonUnitsEl.textContent = dragonUnits;
+      dragonUnitsEl.className = 'value ' + (dragonUnits === 0 ? 'low' : dragonUnits === 1 ? 'mid' : 'high');
 
-      // Panda running count + indicator
+      // Panda display
       pandaRCEl.textContent = pandaRC;
+
+      let pandaUnits = 0;
       if (pandaRC >= PANDA_MAX_THR) {
         pandaFlagEl.textContent = 'strong (study zone)';
         pandaFlagEl.className = 'value high';
+        pandaUnits = 2;
       } else if (pandaRC >= PANDA_BET_THR) {
         pandaFlagEl.textContent = 'mild edge';
         pandaFlagEl.className = 'value mid';
+        pandaUnits = 1;
       } else {
         pandaFlagEl.textContent = 'normal';
         pandaFlagEl.className = 'value low';
+        pandaUnits = 0;
       }
+      pandaUnitsEl.textContent = pandaUnits;
+      pandaUnitsEl.className = 'value ' + (pandaUnits === 0 ? 'low' : pandaUnits === 1 ? 'mid' : 'high');
+
+      const totalUnits = dragonUnits + pandaUnits;
+      totalUnitsEl.textContent = totalUnits.toString();
     }
 
     document.getElementById('cards').addEventListener('click', (e) => {
