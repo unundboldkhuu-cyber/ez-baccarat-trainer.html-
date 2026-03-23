@@ -244,7 +244,7 @@
   <div class="panel">
     <h2>Dragon 7 count</h2>
     <p class="note">
-      Tags: 4–7 = −1, 8–9 = +2, others = 0. Based on simulation, study zones:
+      Tags: 4–7 = −1, 8–9 = +2, others = 0. Study zones from simulation:
       TC ≥ 4.0 (edge starts), TC ≥ 5.0 (strong).[code_file:1]
     </p>
 
@@ -262,7 +262,7 @@
         <span id="dragonTC" class="value low">0.00</span>
       </div>
       <div class="chip-row">
-        <span class="chip chip-warn">TC &lt; 4.0: no bet zone</span>
+        <span class="chip chip-warn">TC &lt; 4.0: no‑bet zone</span>
         <span class="chip">4.0 ≤ TC &lt; 5.0: mild edge (1 unit in notebook)</span>
         <span class="chip chip-strong">TC ≥ 5.0: strong edge (2 units in notebook)</span>
       </div>
@@ -286,7 +286,7 @@
         <span id="pandaFlag" class="value low">normal</span>
       </div>
       <div class="chip-row">
-        <span class="chip chip-warn">RC &lt; 32: no bet zone</span>
+        <span class="chip chip-warn">RC &lt; 32: no‑bet zone</span>
         <span class="chip">32 ≤ RC &lt; 38: mild edge (1 unit in notebook)</span>
         <span class="chip chip-strong">RC ≥ 38: strong edge (2 units in notebook)</span>
       </div>
@@ -294,7 +294,7 @@
   </div>
 
   <script>
-    // === Thresholds from simulation (study-only) ===
+    // Thresholds from simulation (study only)
     const DRAGON_BET_THR = 4.0;   // start Dragon interest
     const DRAGON_MAX_THR = 5.0;   // strong Dragon zone
 
@@ -309,7 +309,7 @@
       '10': 0, 'J': 0, 'Q': 0, 'K': 0
     };
 
-    // Simplified Panda 8 co-count tags (unbalanced)
+    // Simplified Panda 8 co-count tags
     const PANDA_TAGS = {
       'A':  1,
       '2':  0,
